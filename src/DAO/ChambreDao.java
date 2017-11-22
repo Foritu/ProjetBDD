@@ -55,7 +55,8 @@ public class ChambreDao extends DAO<Chambre> {
 	public boolean update(Chambre obj) {
 		return false;
 	}
-
+	
+	//Renvoie une variable chambre contenant les données de la chambre d'id id
 	public Chambre find(int id) {
 		Chambre c = new Chambre();
 		try {
@@ -77,6 +78,8 @@ public class ChambreDao extends DAO<Chambre> {
 		return null;
 	}
 	
+	
+	//Renvoie l'identifiant de la premiere chambre de libre correspondant au type et étant dans l'hotel voulu
 	public int findChambreLibre(String nom, int type){
 		int res = 0;
 		try{
@@ -96,6 +99,8 @@ public class ChambreDao extends DAO<Chambre> {
 		return res;
 	}
 	
+	
+	//Modifie les service de la chambre d'id idChambre
 	public boolean setService(int service, int idChambre){
 		boolean res = false;
 		try {
@@ -110,6 +115,7 @@ public class ChambreDao extends DAO<Chambre> {
 		return res;
 	}
 	
+	//Loue la chambre d'id id en lui associant les services service
 	public boolean louer(int id,int service){
 		boolean res=false;
 		try {
@@ -124,6 +130,7 @@ public class ChambreDao extends DAO<Chambre> {
 		return res;
 	}
 	
+	//Supprime une chambre suivant son numero et son hotel (useless ??)
 	public boolean deleteByNum(int num,int idHotel){
 		boolean res =false;
 		PreparedStatement prep;
