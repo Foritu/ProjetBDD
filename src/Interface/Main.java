@@ -44,7 +44,7 @@ public class Main {
 		}
 		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		}while(rep!=0);
-		
+		System.out.println("Au revoir.");
 	}
 	
 	public static void AjoutHotel(){
@@ -53,16 +53,22 @@ public class Main {
 		
 		System.out.println("Quel est le nom de l'Hotel ?");
 		String nom = clavier.next();
-		System.out.println("Combien de chambre dans cet Hotel ?");
-		int nbChambre = clavier.nextInt();
-		System.out.println("Combien d'etoiles a cet Hotel ?");
-		int Etoiles = clavier.nextInt();
-		h.setEtoiles(Etoiles);
-		h.setNbChambres(nbChambre);
 		h.setNom(nom);
-		hDao.create(h);
-		h=hDao.findByName(nom);
-		AjoutChambreCreationHotel(nbChambre,h.getId());
+		if(hDao.findByName(nom)==null){
+			System.out.println("Combien de chambre dans cet Hotel ?");
+			int nbChambre = clavier.nextInt();
+			h.setNbChambres(nbChambre);
+			System.out.println("Combien d'etoiles a cet Hotel ?");
+			int Etoiles = clavier.nextInt();
+			h.setEtoiles(Etoiles);
+			hDao.create(h);
+			h=hDao.findByName(nom);
+			AjoutChambreCreationHotel(nbChambre,h.getId());
+		}
+		else{
+			System.out.println("Un hotel portant ce nom existe deja.");
+		}
+		
 	}
 	
 	public static void AjoutChambreCreationHotel(int nb,int idHotel){
