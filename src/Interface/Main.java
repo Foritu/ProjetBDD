@@ -8,6 +8,7 @@ import DAO.ChambreDao;
 import DAO.HotelDao;
 import Modele.Chambre;
 import Modele.Hotel;
+import Modele.Service;
 import Modele.SingletonConnection;
 
 public class Main {
@@ -24,25 +25,50 @@ public class Main {
 		
 		System.out.println("Bienvenue");
 		do{
-		System.out.println("Que voulez vous faire ?");
-		System.out.println("0 : Quitter");
-		System.out.println("1 : Ajouter un Hotel.");
-		System.out.println("2 : Supprimer un Hotel.");
-		System.out.println("3 : Ajouter une chambre.");
-		System.out.println("4 : Supprimer une chambre.");
+			System.out.println("Admin (1) ou Client(2)");
+			rep=clavier.nextInt();
+			switch(rep){
+			case 1:	
+				do{
+				System.out.println("Que voulez vous faire ?");
+				System.out.println("0 : Quitter");
+				System.out.println("1 : Ajouter un Hotel.");
+				System.out.println("2 : Supprimer un Hotel.");
+				System.out.println("3 : Ajouter une chambre.");
+				System.out.println("4 : Supprimer une chambre.");
 		
-		rep=clavier.nextInt();
-		switch(rep){
-		case 1:AjoutHotel();
+				rep=clavier.nextInt();
+				switch(rep){
+				case 1:AjoutHotel();
+						break;
+				case 2:SupprHotel();
+						break;
+				case 3:AjoutChambre();
+						break;
+				case 4:SupprChambre();
+						break;
+				}
+				System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+				}while(rep!=0);
+			break;
+			case 2:do{
+				System.out.println("Que voulez vous faire ?");
+				System.out.println("0 : Quitter");
+				System.out.println("1 : Louer une chambre");
+				System.out.println("2 : Rendre une chambre");
+				System.out.println("3 : Modifier les services");
+				rep=clavier.nextInt();
+				switch(rep){
+				case 1:LouerChambre();
+					break;
+				case 2:RendreChambre();
+					break;
+				case 3:ModifierServices();
+					break;
+				}
+			}while(rep!=0);
 				break;
-		case 2:SupprHotel();
-				break;
-		case 3:AjoutChambre();
-				break;
-		case 4:SupprChambre();
-				break;
-		}
-		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			}
 		}while(rep!=0);
 		System.out.println("Au revoir.");
 	}
@@ -126,6 +152,80 @@ public class Main {
 		System.out.println("Quel est le numero de la chambre a supprimer ?");
 		int num = clavier.nextInt();
 		cDao.deleteByNum(num, idHotel);
+	}
+	
+	public static void LouerChambre(){
+		Chambre c = new Chambre();
+		ChambreDao cDao = new ChambreDao(conn);
+		HotelDao hDao = new HotelDao(conn);
+		String nom;
+		Service serv;
+		
+		System.out.println("Quel est le nom de l'Hotel ou vous souhaitez resider ?");
+		nom = clavier.next();
+		Hotel h = hDao.findByName(nom);
+		if(h!=null){
+			System.out.println("Quel type de chambre souhaitez-vous ?\n(1: Simple;2:Double;3:Suite)");
+			int type = clavier.nextInt();
+			int idChambre=cDao.findChambreLibre(nom, type);
+			if(idChambre==-1)
+				System.out.println("Aucune chambre libre de ce type dans cet Hotel");
+			else{
+				Service s = SelectionService();
+				cDao.louer(idChambre, s.getId());
+				System.out.println(s.getId());
+				
+				c=cDao.find(idChambre);
+				System.out.println("Votre chambre est la n°"+c.getNumero()+" de l'Hotel "+nom+".");
+			}
+		}
+		else{
+			System.out.println("Aucun Hotel ne porte ce nom.");
+		}
+	}
+	
+	public static Service SelectionService(){
+		Service s= new Service();
+		int rep;
+		
+		System.out.println("Souhaitez vous le Wifi ?\n(1:Oui;2:Non)");
+		rep = clavier.nextInt();
+		if(rep==1)
+			s.setWifi(true);
+		
+		System.out.println("Souhaitez-vous le room-Service ?");
+		rep=clavier.nextInt();
+		if(rep==1)
+			s.setRoomService(true);
+		
+		System.out.println("Souhaitez-vous la tele ?");
+		rep=clavier.nextInt();
+		if(rep==1)
+			s.setTele(true);
+		
+		System.out.println("Shouaitez-vous avoir un frigo rempli ?");
+		rep=clavier.nextInt();
+		if(rep==1)
+			s.setFrigoRempli(true);
+		
+		return s;
+	}
+	
+	public static void RendreChambre(){
+		Chambre c = new Chambre();
+		ChambreDao cDao = new ChambreDao(conn);
+		HotelDao hDao = new HotelDao(conn);
+		
+		System.out.println("Quel est le nom de votre Hotel ?");
+		String nom = clavier.next();
+		System.out.println("Quel est le numero de votre chambre ?");
+		int num = clavier.nextInt();
+		
+		
+	}
+	
+	public static void ModifierServices(){
+		
 	}
 
 }

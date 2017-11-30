@@ -69,19 +69,20 @@ public class ChambreDao extends DAO<Chambre> {
 				c.setPrise(res.getBoolean("prise"));
 				c.setService(res.getInt("service"));
 				c.setTypeDeChambre(res.getInt("typeDeChambre"));
+				c.setNumero(res.getInt("numero"));
 			}
 			else 
 				c=null;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return c;
 	}
 	
 	
 	//Renvoie l'identifiant de la premiere chambre de libre correspondant au type et étant dans l'hotel voulu
 	public int findChambreLibre(String nom, int type){
-		int res = 0;
+		int res = -1;
 		try{
 			HotelDao hDao = new HotelDao(conn);
 			Hotel h = hDao.findByName(nom);
@@ -119,9 +120,10 @@ public class ChambreDao extends DAO<Chambre> {
 	public boolean louer(int id,int service){
 		boolean res=false;
 		try {
-			PreparedStatement prep = conn.prepareStatement("update Chambre set 'prise'=TRUE 'service'=? where id=?");
-			prep.setInt(1, service);
-			prep.setInt(2, id);
+			PreparedStatement prep = conn.prepareStatement("Update Chambre set prise=? ,service=? where id=?");
+			prep.setBoolean(1, true);
+			prep.setInt(2, service);
+			prep.setInt(3, id);
 			prep.executeUpdate();
 			res=true;
 		} catch (SQLException e) {
@@ -144,6 +146,24 @@ public class ChambreDao extends DAO<Chambre> {
 			e.printStackTrace();
 		}
 	
+		return res;
+	}
+	
+	public boolean rendreChambre(int numero,String nomHotel){
+		boolean res=false;
+		PreparedStatement prep;
+		HotelDao hDao = null;
+		Hotel h = hDao.findByName(nomHotel);
+		int idHotel = h.getId();
+		try {
+			prep = conn.prepareStatement("Update from Chambre set prise='false', service='16' where idhotel=? and numero=?");
+			prep.setInt(1, idHotel);
+			prep.setInt(2, numero);
+			prep.executeUpdate();
+			res=true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return res;
 	}
 
