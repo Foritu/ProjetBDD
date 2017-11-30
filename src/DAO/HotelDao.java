@@ -106,5 +106,22 @@ public class HotelDao extends DAO<Hotel> {
 		
 		return res;
 	}
+
+	public boolean print() {
+		boolean res = false;
+		PreparedStatement prep;
+		try {
+			prep = conn.prepareStatement("Select nom from Hotel");
+			ResultSet resu = prep.executeQuery();
+			System.out.println("Liste des noms des Hotels");
+			while(resu.next()){
+				System.out.println(resu.getString(1));
+			}
+			res = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
 		
 }

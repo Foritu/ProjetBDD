@@ -63,7 +63,8 @@ public class Main {
 				System.out.println("4 : Modifier location");
 				rep=clavier.nextInt();
 				switch(rep){
-				case 1:LouerChambre();
+				case 1:AfficheHotels();
+					LouerChambre();
 					break;
 				case 2:RendreChambre();
 					break;
@@ -297,6 +298,11 @@ public class Main {
 		loc.setIdChambre(idChambre);
 		l.update(loc);
 		
+	}
+	
+	public static void AfficheHotels(){
+		HotelDao hDao = new HotelDao(conn);
+		hDao.print();
 	}
 	
 }
