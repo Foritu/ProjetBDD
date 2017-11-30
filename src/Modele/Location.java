@@ -8,7 +8,7 @@ public class Location {
 	private Date dateRendu;
 	private int idChambre;
 
-	public Date getDateDebut() {
+	public java.sql.Date getDateDebut() {
 		return dateDebut;
 	}
 

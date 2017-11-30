@@ -56,12 +56,13 @@ public class ChambreDao extends DAO<Chambre> {
 		return false;
 	}
 	
-	//Renvoie une variable chambre contenant les données de la chambre d'id id
-	public Chambre find(int id) {
+	//Renvoie une variable chambre contenant les données de la chambre de numero num dans l'Hotel d'id idHotel
+	public Chambre find(int id,int idHotel) {
 		Chambre c = new Chambre();
 		try {
-			PreparedStatement prep= conn.prepareStatement("select * from chambre where id=?");
+			PreparedStatement prep= conn.prepareStatement("select * from chambre where numero=? and idHotel=?");
 			prep.setInt(1, id);
+			prep.setInt(2, idHotel);
 			ResultSet res = prep.executeQuery();
 			if(res.next()){
 				c.setId(id);
@@ -153,8 +154,7 @@ public class ChambreDao extends DAO<Chambre> {
 		boolean res=false;
 		PreparedStatement prep;
 		HotelDao hDao = null;
-		Hotel h = hDao.findByName(nomHotel);
-		int idHotel = h.getId();
+		int idHotel = hDao.findByName(nomHotel).getId();
 		try {
 			prep = conn.prepareStatement("Update from Chambre set prise='false', service='16' where idhotel=? and numero=?");
 			prep.setInt(1, idHotel);
@@ -166,5 +166,48 @@ public class ChambreDao extends DAO<Chambre> {
 		}
 		return res;
 	}
+	
+	public boolean modifierService(int numero,String nomHotel,int service){
+		boolean res = false;
+		PreparedStatement prep;
+		HotelDao hDao =null;
+		int idHotel = hDao.findByName(nomHotel).getId();
+		try {
+			prep = conn.prepareStatement("Update from Chambre set service=? where idHotel=? and numero=?");
+			prep.setInt(1, service);
+			prep.setInt(2, idHotel);
+			prep.setInt(3, numero);
+			prep.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	@Override
+	public Chambre find(int id) {
+		Chambre c = new Chambre();
+		try {
+		PreparedStatement prep= conn.prepareStatement("select * from chambre where id=?");
+		prep.setInt(1, id);
+		ResultSet res = prep.executeQuery();
+		if(res.next()){
+		c.setId(id);
+		c.setIdHotel(res.getInt("idHotel"));
+		c.setPrise(res.getBoolean("prise"));
+		c.setService(res.getInt("service"));
+		c.setTypeDeChambre(res.getInt("typeDeChambre"));
+		c.setNumero(res.getInt("numero"));
+		}
+		else
+		c=null;
+		} catch (SQLException e) {
+		e.printStackTrace();
+		}
+		return c;
+	}
+	
+	
 
 }
