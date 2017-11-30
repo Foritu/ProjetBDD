@@ -1,6 +1,8 @@
 package Interface;
 
 import java.io.Console;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.sql.Connection;
 import java.sql.Date;
 import java.util.Scanner;
@@ -247,27 +249,32 @@ public class Main {
 	public static void SelectionDate(int idChambre){
 		Location loc = new Location();
 		LocationDao l = new LocationDao(conn);
+		Calendar cal = new GregorianCalendar();
 		
 		System.out.println("Quel jour arriverez-vous ?");
 		int jour = clavier.nextInt();
 		System.out.println("Quel mois ?");
-		int mois = clavier.nextInt();
+		int mois = clavier.nextInt()-1;
 		System.out.println("Quelle année ?");
-		int annee = clavier.nextInt();
+		int annee = clavier.nextInt()-1900;
 		
 		Date dateDebut = new Date(annee,mois,jour);
+		cal.setTime(dateDebut);
+		dateDebut = new java.sql.Date(cal.getTimeInMillis());
+		loc.setDateDebut(dateDebut);
 		
 		System.out.println("Quel jour repartire vous ?");
 		jour = clavier.nextInt();
 		System.out.println("Quel mois ?");
-		mois = clavier.nextInt();
+		mois = clavier.nextInt()-1;
 		System.out.println("Quelle annee ?");
-		annee = clavier.nextInt();
+		annee = clavier.nextInt()-1900;
 		
 		Date dateFin = new Date(annee,mois,jour);
-		
-		loc.setDateDebut(dateDebut);
+		cal.setTime(dateFin);
+		dateFin = new java.sql.Date(cal.getTimeInMillis());
 		loc.setDateRendu(dateFin);
+		
 		loc.setIdChambre(idChambre);
 		
 		l.create(loc);
@@ -278,6 +285,7 @@ public class Main {
 		LocationDao l = new LocationDao(conn);
 		HotelDao hDao = new HotelDao(conn);
 		ChambreDao cDao = new ChambreDao(conn);
+		Calendar cal = new GregorianCalendar();
 		
 		System.out.println("Quel est le nom de votre Hotel ?");		
 		int idHotel = hDao.findByName(clavier.next()).getId();
@@ -288,13 +296,16 @@ public class Main {
 		System.out.println("Quel jour repartirez vous ?");
 		int jour = clavier.nextInt();
 		System.out.println("Quel mois ?");
-		int mois = clavier.nextInt();
+		int mois = clavier.nextInt()-1;
 		System.out.println("Quelle annee ?");
-		int annee = clavier.nextInt();
+		int annee = clavier.nextInt()-1900;
 		
 		Date dateFin = new Date(annee,mois,jour);
-		
+		cal.setTime(dateFin);
+		dateFin = new java.sql.Date(cal.getTimeInMillis());
 		loc.setDateRendu(dateFin);
+		loc.setDateRendu(dateFin);
+		
 		loc.setIdChambre(idChambre);
 		l.update(loc);
 		
