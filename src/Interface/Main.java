@@ -275,8 +275,8 @@ public class Main {
 	public static void ModifierLocation(){
 		Location loc = new Location();
 		LocationDao l = new LocationDao(conn);
-		HotelDao hDao = null;
-		ChambreDao cDao = null;
+		HotelDao hDao = new HotelDao(conn);
+		ChambreDao cDao = new ChambreDao(conn);
 		
 		System.out.println("Quel est le nom de votre Hotel ?");		
 		int idHotel = hDao.findByName(clavier.next()).getId();
@@ -284,7 +284,7 @@ public class Main {
 		int num = clavier.nextInt();
 		int idChambre = cDao.find(num, idHotel).getId();
 		
-		System.out.println("Quel jour repartire vous ?");
+		System.out.println("Quel jour repartirez vous ?");
 		int jour = clavier.nextInt();
 		System.out.println("Quel mois ?");
 		int mois = clavier.nextInt();
