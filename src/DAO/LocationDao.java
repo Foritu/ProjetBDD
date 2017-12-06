@@ -67,7 +67,7 @@ public class LocationDao extends DAO<Location> {
 
 	@Override
 	public Location find(int idChambre) {
-		Location loc = null;
+		Location loc = new Location();
 		PreparedStatement prep;
 		try {
 			prep = conn.prepareStatement("Select * from Location where idChambre=?");

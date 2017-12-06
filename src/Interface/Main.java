@@ -229,9 +229,11 @@ public class Main {
 		String nom = clavier.next();
 		System.out.println("Quel est le numero de votre chambre ?");
 		int num = clavier.nextInt();
-		int idCh=cDao.find(num,hDao.findByName(nom).getId()).getId();
-		Location L = lDao.find(idCh);
-		System.out.println("La somme à regler est de "+lDao.prix(L)+"€.");
+		int idHotel = hDao.findByName(nom).getId();
+		int idChambre = cDao.find(num, idHotel).getId();
+		Location L = lDao.find(idChambre);
+		double prix = lDao.prix(L);
+		System.out.println("Le prix est de : "+prix);
 		cDao.rendreChambre(num, nom);		
 	}
 	
