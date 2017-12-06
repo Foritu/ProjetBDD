@@ -223,11 +223,15 @@ public class Main {
 		Chambre c = new Chambre();
 		ChambreDao cDao = new ChambreDao(conn);
 		HotelDao hDao = new HotelDao(conn);
+		LocationDao lDao = new LocationDao(conn);
 		
 		System.out.println("Quel est le nom de votre Hotel ?");
 		String nom = clavier.next();
 		System.out.println("Quel est le numero de votre chambre ?");
 		int num = clavier.nextInt();
+		int idCh=cDao.find(num,hDao.findByName(nom).getId()).getId();
+		Location L = lDao.find(idCh);
+		System.out.println("La somme à regler est de "+lDao.prix(L)+"€.");
 		cDao.rendreChambre(num, nom);		
 	}
 	
