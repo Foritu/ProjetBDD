@@ -4,13 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 
 import Modele.Location;
 import Modele.SingletonConnection;
 
 public class LocationDao extends DAO<Location> {
 
-	Connection conn = SingletonConnection.getConnection();
+	Connection conn = SingletonConnection.getConnection("cguerin","");
 	
 	public LocationDao(Connection conn) {
 		super(conn);
@@ -65,7 +67,7 @@ public class LocationDao extends DAO<Location> {
 
 	@Override
 	public Location find(int idChambre) {
-		Location loc = null;
+		Location loc = new Location();
 		PreparedStatement prep;
 		try {
 			prep = conn.prepareStatement("Select * from Location where idChambre=?");
@@ -80,6 +82,57 @@ public class LocationDao extends DAO<Location> {
 			e.printStackTrace();
 		}
 		return loc;
+	}
+	
+	public double Prix(int idChambre){
+		int res=0;
+		PreparedStatement prep;
+		try {
+			prep = conn.prepareStatement("select * from Location where idChambre=?");
+			ResultSet resu = prep.executeQuery();
+			if(resu.next()){
+				res = resu.getDate(1).compareTo(resu.getDate(2));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
+	public double prix(Location obj){
+		double res=0;
+		int typeDeChambre=0, service=0;
+		int nbJours = obj.NbJour();
+		try {
+			PreparedStatement prep = conn.prepareStatement("Select typeDeChambre from Chambre where id=?");
+			prep.setInt(1, obj.getIdChambre());
+			ResultSet resu = prep.executeQuery();
+			if(resu.next())
+				typeDeChambre = resu.getInt("typeDeChambre");
+			if(typeDeChambre==1)
+				res = nbJours *30;
+			else
+				res = nbJours*30*(typeDeChambre-0.5);
+			prep = conn.prepareStatement("Select Service from Chambre where id=?");
+			prep.setInt(1, obj.getIdChambre());
+			resu = prep.executeQuery();
+			if(resu.next())
+				service = resu.getInt("Service");
+			if(service ==1)
+				res +=20;
+			if(service>=2 && service<=5)
+				res +=15;
+			if(service>=6 && service<=11)
+				res +=10;
+			if(service>=12 && service<=15)
+				res+=5;
+			if(service ==16)
+				res+=0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 
 }

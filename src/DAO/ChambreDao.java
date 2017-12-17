@@ -11,7 +11,7 @@ import Modele.SingletonConnection;
 
 public class ChambreDao extends DAO<Chambre> {
 
-	Connection conn = SingletonConnection.getConnection();
+	Connection conn = SingletonConnection.getConnection("cguerin","");
 	
 	public ChambreDao(Connection conn) {
 		super(conn);
@@ -56,16 +56,16 @@ public class ChambreDao extends DAO<Chambre> {
 		return false;
 	}
 	
-	//Renvoie une variable chambre contenant les données de la chambre de numero num dans l'Hotel d'id idHotel
+	//Renvoie une variable chambre contenant les données de la chambre de numero id dans l'Hotel d'id idHotel
 	public Chambre find(int id,int idHotel) {
 		Chambre c = new Chambre();
 		try {
-			PreparedStatement prep= conn.prepareStatement("select * from chambre where numero=? and idHotel=?");
+			PreparedStatement prep= conn.prepareStatement("select * from chambre where numero=? and idhotel=?");
 			prep.setInt(1, id);
 			prep.setInt(2, idHotel);
 			ResultSet res = prep.executeQuery();
 			if(res.next()){
-				c.setId(id);
+				c.setId(res.getInt("id"));
 				c.setIdHotel(res.getInt("idHotel"));
 				c.setPrise(res.getBoolean("prise"));
 				c.setService(res.getInt("service"));
@@ -153,10 +153,10 @@ public class ChambreDao extends DAO<Chambre> {
 	public boolean rendreChambre(int numero,String nomHotel){
 		boolean res=false;
 		PreparedStatement prep;
-		HotelDao hDao = null;
+		HotelDao hDao = new HotelDao(conn);
 		int idHotel = hDao.findByName(nomHotel).getId();
 		try {
-			prep = conn.prepareStatement("Update from Chambre set prise='false', service='16' where idhotel=? and numero=?");
+			prep = conn.prepareStatement("Update Chambre set prise='false', service='16' where idhotel=? and numero=?");
 			prep.setInt(1, idHotel);
 			prep.setInt(2, numero);
 			prep.executeUpdate();

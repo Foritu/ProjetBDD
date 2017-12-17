@@ -1,6 +1,8 @@
 package Modele;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Location {
 
@@ -30,6 +32,10 @@ public class Location {
 
 	public void setIdChambre(int idChambre) {
 		this.idChambre = idChambre;
+	}
+	
+	public int NbJour(){
+		return (int) ChronoUnit.DAYS.between(LocalDate.parse(this.getDateDebut().toString()),LocalDate.parse(this.getDateRendu().toString()));
 	}
 	
 }

@@ -18,7 +18,7 @@ import Modele.SingletonConnection;
 
 public class Main {
 
-	static Connection conn = SingletonConnection.getConnection();
+	static Connection conn = SingletonConnection.getConnection("cguerin", "");
 	static Scanner clavier = new Scanner(System.in);
     static Console console = System.console();        
 	
@@ -223,11 +223,18 @@ public class Main {
 		Chambre c = new Chambre();
 		ChambreDao cDao = new ChambreDao(conn);
 		HotelDao hDao = new HotelDao(conn);
-		
+		LocationDao lDao = new LocationDao(conn);
+				
 		System.out.println("Quel est le nom de votre Hotel ?");
 		String nom = clavier.next();
+		int idHotel=hDao.findByName(nom).getId();
 		System.out.println("Quel est le numero de votre chambre ?");
 		int num = clavier.nextInt();
+		int idChambre=cDao.find(num, idHotel).getId();
+		System.out.println(lDao.Prix(idChambre));
+		Location L = lDao.find(idChambre);
+		double prix = lDao.prix(L);
+		System.out.println("Le prix est de : "+prix);
 		cDao.rendreChambre(num, nom);		
 	}
 	

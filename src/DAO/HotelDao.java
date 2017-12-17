@@ -11,7 +11,7 @@ import Modele.SingletonConnection;
 
 public class HotelDao extends DAO<Hotel> {
 
-	Connection conn = SingletonConnection.getConnection();
+	Connection conn = SingletonConnection.getConnection("cguerin","");
 	
 	public HotelDao(Connection conn){
 		super(conn);
